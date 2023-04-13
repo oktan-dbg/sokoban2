@@ -1,24 +1,32 @@
-import logo from './logo.svg';
 import './App.css';
+import React,{useState} from 'react'
+
 
 function App() {
+  //this.setState({ image: './background_menu.jpg' });
+  const [show,setShow]=useState(true)
+  const [active, setActive] = useState(false);
+  const play = ()=>{
+    setActive(!active);
+    setShow(!show)
+    //this.setState({ image: './background_menu.jpg' });
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+        
+    <section className="mainContainer" style={{backgroundImage: active ? "./src/background_menu.jpg" : "dirt_background.jpg"}}>
+      <div className="App">
+      {
+        show?
+        <div className="home">
+          <p className='sokoban_txt'>SOKOBAN</p>
+          <button className="play_btn" onClick={play}>Rozpocznij Gre</button>
+          <button className="settings_btn">Ustawienia</button>
+          <button className="exit_btn">Wyjscie</button>
+        </div>:null
+      }
+      </div>
+    </section>
+    
   );
 }
 
