@@ -1,34 +1,40 @@
 import React, {useEffect, useReducer} from "react"
+import background from "./dirt_background.jpg"
 
 const LEVELS = [ // 0=playground, 1=wall, 2=box (playground bellow), 4=storage, 5=player (playground bellow), 8=outside world
     [ // level 1      
-      [8,8,8,8,1,1,1,1,1,8,8,8,8,8,8,8,8,8,8],
-      [8,8,8,8,1,0,0,0,1,8,8,8,8,8,8,8,8,8,8],
-      [8,8,8,8,1,2,0,0,1,8,8,8,8,8,8,8,8,8,8],
-      [8,8,1,1,1,0,0,2,1,1,8,8,8,8,8,8,8,8,8],
-      [8,8,1,0,0,2,0,2,0,1,8,8,8,8,8,8,8,8,8],
-      [1,1,1,0,1,0,1,1,0,1,8,8,8,1,1,1,1,1,1],
-      [1,0,0,0,1,0,1,1,0,1,1,1,1,1,0,0,4,4,1],
-      [1,0,2,0,0,2,0,0,0,0,0,0,0,0,0,0,4,4,1],
-      [1,1,1,1,1,0,1,1,1,0,1,5,1,1,0,0,4,4,1],
-      [8,8,8,8,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1],
-      [8,8,8,8,1,1,1,1,1,1,1,8,8,8,8,8,8,8,8],
+      [8,8,8,8,8,8,8,8,8,8,8,8,8,8],
+      [8,8,8,8,8,8,8,1,1,1,1,8,8,8],
+      [8,1,1,1,1,1,1,1,0,5,1,8,8,8],
+      [8,1,0,0,0,0,0,2,0,0,1,8,8,8],
+      [8,1,0,0,0,2,1,1,0,2,1,8,8,8],
+      [8,1,1,2,1,4,4,4,1,0,1,8,8,8],
+      [8,8,1,0,2,4,4,4,0,0,1,8,8,8],
+      [8,8,1,0,1,4,0,4,1,0,1,1,8,8],
+      [8,8,1,0,0,0,1,0,1,2,0,1,8,8],
+      [8,8,1,2,0,0,2,0,0,0,0,1,8,8],
+      [8,8,1,0,0,1,1,1,1,1,1,1,8,8],
+      [8,8,1,1,1,1,8,8,8,8,8,8,8,8],
+      [8,8,8,8,8,8,8,8,8,8,8,8,8,8],
     ],
     [ // level 2      
-      [1,1,1,1,1,1,1,1,1,1,1,1,8,8],
-      [1,4,4,0,0,1,0,0,0,0,0,1,1,1],
-      [1,4,4,0,0,1,0,2,0,0,2,0,0,1],
-      [1,4,4,0,0,1,2,1,1,1,1,0,0,1],
-      [1,4,4,0,0,0,0,5,0,1,1,0,0,1],
-      [1,4,4,0,0,1,0,1,0,0,2,0,1,1],
-      [1,1,1,1,1,1,0,1,1,2,0,2,0,1],
-      [8,8,1,0,2,0,0,2,0,2,0,2,0,1],
-      [8,8,1,0,0,0,0,1,0,0,0,0,0,1],
-      [8,8,1,1,1,1,1,1,1,1,1,1,1,1],
+      [8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8],
+      [8,1,1,1,1,1,1,1,1,1,1,1,1,8,8,8],
+      [8,1,4,4,0,0,1,0,0,0,0,0,1,1,1,8],
+      [8,1,4,4,0,0,1,0,2,0,0,2,0,0,1,8],
+      [8,1,4,4,0,0,1,2,1,1,1,1,0,0,1,8],
+      [8,1,4,4,0,0,0,0,5,0,1,1,0,0,1,8],
+      [8,1,4,4,0,0,1,0,1,0,0,2,0,1,1,8],
+      [8,1,1,1,1,1,1,0,1,1,2,0,2,0,1,8],
+      [8,8,8,1,0,2,0,0,2,0,2,0,2,0,1,8],
+      [8,8,8,1,0,0,0,0,1,0,0,0,0,0,1,8],
+      [8,8,8,1,1,1,1,1,1,1,1,1,1,1,1,8],
+      [8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8],
     ] 
   ]
 //             0       1       2        3     4         5       6     7        8  
 const COLOR = ["#ddd", "#777", "brown", null, "orange", "#000", null, "green", "transparent"]
+const IMAGE = ["./tnt.jpg", "./tnt.jpg", "./tnt.jpg", "./tnt.jpg", "./tnt.jpg", "./tnt.jpg", "./tnt.jpg", "./tnt.jpg", "./tnt.jpg"]
 const COLOR_IN_PLACE = 7 // index of green color from COLORS
 const ITEM = {
   Playground:       0,
@@ -145,14 +151,15 @@ export default function Sokoban() {
   });  
 
   return (
-    <div className="Sokoban">
-      <div>React Sokoban. controls: LEFT, RIGHT, UP, DOWN. colors: black=player, brown=box, orange=destination, green=box in place</div>
-      <button onClick={()=> dispatch({type: ACTION.RestartLevel})}>Restart level</button>
-      {state.status === GAME_STATE.Done && state.levelNo<LEVELS.length-1 && <button onClick={()=> dispatch({type: ACTION.PlayNextLevel})}>Next level</button>}
-      {state.status === GAME_STATE.Done && <h3>Level completed!</h3>}
+    <div className="Sokoban" style={{backgroundImage: `url(${background})`, color: "white", fontFamily: "Minecraft" }}>
+      <div>Kontrolowanie postacią strzałkami: lewo, prawo, góra, dół. kolory: czrne=gracz, brązowy=skrzynka, Pomorańczowy=droga, zielony=miejsce na skrzynke</div>
+      <button onClick={()=> dispatch({type: ACTION.RestartLevel})}>Zrestartuj Poziom</button>
+      {state.status === GAME_STATE.Done && state.levelNo<LEVELS.length-1 && <button onClick={()=> dispatch({type: ACTION.PlayNextLevel})}>Następny Poziom</button>}
+      {state.status === GAME_STATE.Done && <h3>Poziom Ukończony!</h3>}
         {[...state.level].map( (row, y) => {
           return <div key={`${y}`} style={{display: 'block', lineHeight: 0}}>{
-            row.map( (col, x) => {return <div key={`${y}-${x}`} style={{backgroundColor: COLOR[getColor(y,x, col, state.player, state.box, state.level[y][x]===ITEM.Storage)], width: "20px", height:"20px", display:"inline-block", border: state.level[y][x]===ITEM.World ? '1px solid transparent': '1px solid #ccc'}}/>})  
+            
+            row.map( (col, x) => {return <div key={`${y}-${x}`} style={{backgroundImage: IMAGE[getColor(y,x, col, state.player, state.box, state.level[y][x]===ITEM.Storage)], backgroundColor: COLOR[getColor(y,x, col, state.player, state.box, state.level[y][x]===ITEM.Storage)], width: "20px", height:"20px", display:"inline-block", border: state.level[y][x]===ITEM.World ? '1px solid transparent': '1px solid #ccc'}}/>})  
           }</div> 
         })}
     </div>
