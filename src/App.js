@@ -13,7 +13,7 @@ function App() {
   }
   return (
         
-    <section className="mainContainer" style={{backgroundImage: active ? "./src/background_menu.jpg" : "dirt_background.jpg"}}>
+    <section className="mainContainer" style={{backgroundImage: `url(${active ? './background_menu.jpg' : './dirt_background.jpg'})` }}>
       <div className="App">
       {
         show?
